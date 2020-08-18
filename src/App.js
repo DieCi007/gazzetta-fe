@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
+import Home from './components/Home';
+import { initialState, reducer } from './context/languageContext'
+
+export const LangContext = React.createContext();
 
 function App() {
+  const [lang, langDispatch] = useReducer(reducer, initialState);
   return (
-    <div className="App">
-      <Navbar />
-    </div>
+    <LangContext.Provider value={{ langState: lang, langDispatch: langDispatch }} >
+      <div className="App">
+        <Home />
+      </div>
+    </ LangContext.Provider>
   );
 }
 

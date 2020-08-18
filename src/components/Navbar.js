@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import '../css/navbar.css';
 import {
     Toolbar, AppBar, Typography, Button, ButtonGroup, Menu, MenuItem,
@@ -8,6 +8,9 @@ import {
     HomeTwoTone, LanguageSharp, ExpandMoreSharp,
     Facebook, YouTube, Instagram, MenuSharp
 } from '@material-ui/icons';
+import LocalizedStrings from 'react-localization';
+import { data } from '../constants/navbarStrings'
+import { LangContext } from '../App';
 
 const StyledMenu = withStyles({
     paper: {
@@ -28,9 +31,12 @@ const StyledMenu = withStyles({
         {...props}
     />
 ));
+let strings = new LocalizedStrings(data);
 function Navbar() {
-    const titles = ["POLITIKE", "AKTUALITET", "EKONOMI", "SPORT", "BOTA"];
-    const moreTitles = ["KULTURE", "LIFESTYLE", "TEKNOLOGJI", "KINEMA"];
+    const langContext = useContext(LangContext);
+    strings.setLanguage(langContext.langState);
+    const titles = [strings.politics, strings.chronicle, strings.economy, strings.sport, strings.world];
+    const moreTitles = [strings.culture, strings.lifestyle, strings.technology, strings.cinema];
     const languages = ["SHQIP", "ENGLISH", "ITALIANO"];
     const [titleAnchor, setTitleAnchor] = useState(null);
     const [langAnchor, setLangAnchor] = useState(null);
@@ -46,12 +52,26 @@ function Navbar() {
     const handleLangClick = (e) => {
         setLangAnchor(e.currentTarget);
     }
-    const handleLangClose = () => {
+    const handleLangClose = (lang) => {
+        switch (lang) {
+            case 'SHQIP':
+                langContext.langDispatch('al');
+                break;
+            case 'ENGLISH':
+                langContext.langDispatch('en');
+                break;
+            case 'ITALIANO':
+                langContext.langDispatch('it');
+                break;
+            default:
+                break;
+        }
         setLangAnchor(null);
     }
     const toggleDrawer = () => {
         setIsDrawerOpen(open => !open);
     }
+
     return (
         <div >
             <AppBar position="fixed" elevation={2}>
@@ -90,7 +110,7 @@ function Navbar() {
                         </Button>
                         <StyledMenu id="language-menu" anchorEl={langAnchor} keepMounted
                             open={Boolean(langAnchor)} onClose={handleLangClose}>
-                            {languages.map(lang => <MenuItem key={lang} onClick={handleLangClose}>{lang}</MenuItem>)}
+                            {languages.map(lang => <MenuItem key={lang} onClick={() => handleLangClose(lang)}>{lang}</MenuItem>)}
                         </StyledMenu>
                     </div>
                     <div className="navbar-sandwich">
@@ -115,7 +135,7 @@ function Navbar() {
                     <Button aria-controls="language-menu-drawer" onClick={handleLangClick}><LanguageSharp fontSize="large" /></Button>
                     <StyledMenu id="language-menu-drawer" anchorEl={langAnchor} keepMounted
                         open={Boolean(langAnchor)} onClose={handleLangClose}>
-                        {languages.map(lang => <MenuItem key={lang} onClick={handleLangClose}>{lang}</MenuItem>)}
+                        {languages.map(lang => <MenuItem key={lang} onClick={() => handleLangClose(lang)}>{lang}</MenuItem>)}
                     </StyledMenu>
                 </div>
             </SwipeableDrawer>
