@@ -60,3 +60,9 @@
         display: flex;
     }
 }
+
+@media only screen and (max-width:250px) {
+    .navbar-logo {
+        display: none;
+    }
+}

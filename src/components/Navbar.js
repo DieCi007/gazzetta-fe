@@ -1,48 +1,31 @@
 import React, { useState, useContext } from 'react';
 import '../css/navbar.css';
 import {
-    Toolbar, AppBar, Typography, Button, ButtonGroup, Menu, MenuItem,
-    withStyles, SwipeableDrawer, List, ListItemText, ListItem, Divider
+    Toolbar, AppBar, Typography, Button, ButtonGroup, MenuItem,
 } from '@material-ui/core';
 import {
     HomeTwoTone, LanguageSharp, ExpandMoreSharp,
-    Facebook, YouTube, Instagram, MenuSharp
+    Facebook, YouTube, Instagram
 } from '@material-ui/icons';
 import LocalizedStrings from 'react-localization';
-import { data } from '../constants/navbarStrings'
+import { data } from '../constants/navbarStrings';
 import { LangContext } from '../App';
+import MyDrawer from './MyDrawer';
+import { StyledMenu } from '../materialStyles/styledMenu'
+import { langs } from '../constants/languageStrings';
 
-const StyledMenu = withStyles({
-    paper: {
-        border: '1px solid #d3d4d5',
-    },
-})((props) => (
-    <Menu
-        elevation={0}
-        getContentAnchorEl={null}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-        }}
-        transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-        }}
-        {...props}
-    />
-));
+
 let strings = new LocalizedStrings(data);
+let langOBJ = new LocalizedStrings(langs);
 function Navbar() {
     const langContext = useContext(LangContext);
     strings.setLanguage(langContext.langState);
     const titles = [strings.politics, strings.chronicle, strings.economy, strings.sport, strings.world];
+
     const moreTitles = [strings.culture, strings.lifestyle, strings.technology, strings.cinema];
-    const languages = ["SHQIP", "ENGLISH", "ITALIANO"];
+    const languages = [langOBJ.al, langOBJ.en, langOBJ.it];
     const [titleAnchor, setTitleAnchor] = useState(null);
     const [langAnchor, setLangAnchor] = useState(null);
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const isMobileUser = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
     const handleTitleClick = (e) => {
         setTitleAnchor(e.currentTarget);
     }
@@ -54,13 +37,13 @@ function Navbar() {
     }
     const handleLangClose = (lang) => {
         switch (lang) {
-            case 'SHQIP':
+            case langOBJ.al:
                 langContext.langDispatch('al');
                 break;
-            case 'ENGLISH':
+            case langOBJ.en:
                 langContext.langDispatch('en');
                 break;
-            case 'ITALIANO':
+            case langOBJ.it:
                 langContext.langDispatch('it');
                 break;
             default:
@@ -68,13 +51,10 @@ function Navbar() {
         }
         setLangAnchor(null);
     }
-    const toggleDrawer = () => {
-        setIsDrawerOpen(open => !open);
-    }
 
     return (
-        <div >
-            <AppBar position="fixed" elevation={2}>
+        <div id="navbar">
+            <AppBar position="relative" elevation={2}>
                 <Toolbar className="navbar-toolbar" >
                     <Typography variant="h5" className="navbar-logo">GAZZETTA.AL</Typography>
                     <div className="navbar-title-list">
@@ -114,31 +94,10 @@ function Navbar() {
                         </StyledMenu>
                     </div>
                     <div className="navbar-sandwich">
-                        <Button style={{ color: 'white' }} onClick={toggleDrawer}>
-                            <MenuSharp fontSize="large" />
-                        </Button>
+                        <MyDrawer />
                     </div>
                 </Toolbar>
             </AppBar>
-            <SwipeableDrawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer} disableSwipeToOpen={!isMobileUser}
-                onOpen={toggleDrawer} disableBackdropTransition={!iOS} disableDiscovery={iOS}>
-                <List style={{ minWidth: 200 }}>
-                    {titles.map(title => <ListItem button key={title}> <ListItemText >{title}</ListItemText></ListItem>)}
-                    {moreTitles.map(title => <ListItem button key={title}> <ListItemText >{title}</ListItemText></ListItem>)}
-                </List>
-                <Divider fontSize="large" />
-                <br />
-                <div className="navbar-drawer-icons">
-                    <Button> <Facebook fontSize="large" style={{ color: 'blue' }} /></Button>
-                    <Button> <YouTube fontSize="large" style={{ color: 'red' }} /></Button>
-                    <Button>  <Instagram fontSize="large" style={{ color: 'orange' }} /></Button>
-                    <Button aria-controls="language-menu-drawer" onClick={handleLangClick}><LanguageSharp fontSize="large" /></Button>
-                    <StyledMenu id="language-menu-drawer" anchorEl={langAnchor} keepMounted
-                        open={Boolean(langAnchor)} onClose={handleLangClose}>
-                        {languages.map(lang => <MenuItem key={lang} onClick={() => handleLangClose(lang)}>{lang}</MenuItem>)}
-                    </StyledMenu>
-                </div>
-            </SwipeableDrawer>
         </div >
     )
 }
