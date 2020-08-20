@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import '../css/navbar.css';
 import {
-    Toolbar, AppBar, Typography, Button, ButtonGroup, MenuItem,
+    Toolbar, AppBar, Typography, Button, ButtonGroup, MenuItem, IconButton
 } from '@material-ui/core';
 import {
     HomeTwoTone, LanguageSharp, ExpandMoreSharp,
@@ -75,19 +75,19 @@ function Navbar() {
                         </StyledMenu>
                     </div>
                     <div className="navbar-links">
-                        <Button className="navbar-links-child" style={{ color: 'white' }}>
+                        <IconButton className="navbar-links-child" style={{ color: 'white' }}>
                             <Facebook fontSize="large" />
-                        </Button>
-                        <Button className="navbar-links-child" style={{ color: 'red' }}>
+                        </IconButton>
+                        <IconButton className="navbar-links-child" style={{ color: 'red' }}>
                             <YouTube fontSize="large" />
-                        </Button>
-                        <Button className="navbar-links-child" style={{ color: 'orange' }}>
+                        </IconButton>
+                        <IconButton className="navbar-links-child" style={{ color: 'orange' }}>
                             <Instagram fontSize="large" />
-                        </Button>
-                        <Button aria-controls="language-menu" onClick={handleLangClick} style={{ color: '#ffdfbd' }}>
+                        </IconButton>
+                        <IconButton aria-controls="language-menu" onClick={handleLangClick} style={{ color: '#ffdfbd' }}>
                             <LanguageSharp fontSize="large" />
                             <ExpandMoreSharp />
-                        </Button>
+                        </IconButton>
                         <StyledMenu id="language-menu" anchorEl={langAnchor} keepMounted
                             open={Boolean(langAnchor)} onClose={handleLangClose}>
                             {languages.map(lang => <MenuItem key={lang} onClick={() => handleLangClose(lang)}>{lang}</MenuItem>)}

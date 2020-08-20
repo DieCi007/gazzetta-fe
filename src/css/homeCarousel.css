@@ -1,0 +1,21 @@
+.carousel {
+    position: relative;
+}
+
+.carousel .slick-arrow {
+    position: absolute;
+}
+
+.carousel .slick-prev {
+    left: 5%;
+    z-index: 1;
+}
+
+.carousel .slick-next {
+    right: 5%;
+    z-index: 1;
+}
+
+.slick-dots {
+    bottom: -15px;
+}

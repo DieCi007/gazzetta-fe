@@ -1,0 +1,147 @@
+import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+import { makeStyles, GridList, GridListTile, GridListTileBar, ListSubheader, CardActionArea } from '@material-ui/core';
+import { LangContext } from '../App';
+import LocalizedStrings from 'react-localization';
+import { data } from '../constants/navbarStrings';
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        [theme.breakpoints.down('1150')]: {
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+        }
+    },
+    tile: {
+        '&:hover': {
+            cursor: 'pointer',
+        }
+    },
+    subHeader: {
+        fontSize: '1.5rem',
+        textAlign: 'center'
+    },
+    gridList: {
+        width: 650,
+        [theme.breakpoints.down('1150')]: {
+            flexDirection: 'row',
+            flexWrap: 'nowrap',
+            width: '100%',
+        }
+    },
+    titleBar: {
+        background:
+            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+    },
+    subtitle: {
+        display: 'flex',
+        justifyContent: 'space-between'
+    },
+    title: {
+        fontWeight: 'bold',
+        whiteSpace: 'normal'
+    },
+    articleTag: {
+        backgroundColor: 'darkgreen',
+        [theme.breakpoints.down('1150')]: {
+            display: 'none'
+        }
+    }
+}));
+
+let strings = new LocalizedStrings({
+    al: {
+        topNews: 'Lajmet e javes'
+    },
+    en: {
+        topNews: 'Top weekly news'
+    },
+    it: {
+        topNews: 'News della settimana'
+    }
+});
+let stringTags = new LocalizedStrings(data);
+
+function TopArticles() {
+    const langContext = useContext(LangContext);
+    strings.setLanguage(langContext.langState);
+    stringTags.setLanguage(langContext.langState);
+    const classes = useStyles();
+    const [gridSize, setGridSize] = useState(2);
+    const [articles, setArticles] = useState([]);
+    useEffect(() => {
+        const handleResize = () => {
+            setGridSize(() => {
+                if (window.innerWidth < 650) return 2;
+                else if (window.innerWidth < 1150) return 3
+                else return 2;
+            });
+        }
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        }
+    }, []);
+
+    useEffect(() => {
+        const fetchArticles = async () => {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
+            try {
+                setArticles(response.data);
+            } catch (err) {
+                setArticles([]);
+                console.log(`Problem fetching data ${err}`);
+            }
+        }
+        fetchArticles();
+    }, []);
+
+
+    return (
+        <div id="topArticles" className={classes.root}>
+            <GridList >
+                <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
+                    <ListSubheader component="div" className={classes.subHeader}>{strings.topNews}</ListSubheader>
+                </GridListTile>
+            </GridList>
+            <GridList cellHeight={180} className={classes.gridList} cols={gridSize}>
+                {
+                    articles.map(article => {
+                        return (
+                            <GridListTile key={article._id} className={classes.tile}>
+                                <CardActionArea>
+                                    <img style={{width:'100%', weight:'100%', objectFit:'cover'}} src={article.media} alt={article.title} />
+                                </CardActionArea>
+                                <GridListTileBar classes={{
+                                    root: classes.titleBar,
+                                    title: classes.title
+                                }}
+                                    title={article.title}
+                                    subtitle={
+                                        <div className={classes.subtitle}>
+                                            <small>
+                                                {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
+                                            </small>
+                                            <small className={classes.articleTag} >
+                                                {stringTags[article.tags[0]]}
+                                            </small>
+                                        </div>
+                                    }
+                                />
+                            </GridListTile>
+                        )
+                    })
+                }
+            </GridList>
+        </ div>
+    )
+}
+
+export default TopArticles;

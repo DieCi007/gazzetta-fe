@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import '../css/navbar.css';
 import { LangContext } from '../App';
-import { SwipeableDrawer, List, Divider, Button, MenuItem, ListItem, ListItemText } from '@material-ui/core';
+import { SwipeableDrawer, List, Divider, Button, MenuItem, ListItem, ListItemText,IconButton } from '@material-ui/core';
 import { Facebook, MenuSharp, YouTube, Instagram, LanguageSharp } from '@material-ui/icons'
 import { StyledMenu } from '../materialStyles/styledMenu';
 import LocalizedStrings from 'react-localization';
@@ -57,10 +57,10 @@ function MyDrawer() {
                 <Divider fontSize="large" />
                 <br />
                 <div className="navbar-drawer-icons">
-                    <Button> <Facebook fontSize="large" style={{ color: 'blue' }} /></Button>
-                    <Button> <YouTube fontSize="large" style={{ color: 'red' }} /></Button>
-                    <Button>  <Instagram fontSize="large" style={{ color: 'orange' }} /></Button>
-                    <Button aria-controls="language-menu-drawer" onClick={handleLangClick}><LanguageSharp fontSize="large" /></Button>
+                    <IconButton> <Facebook fontSize="large" style={{ color: 'blue' }} /></IconButton>
+                    <IconButton> <YouTube fontSize="large" style={{ color: 'red' }} /></IconButton>
+                    <IconButton>  <Instagram fontSize="large" style={{ color: 'orange' }} /></IconButton>
+                    <IconButton aria-controls="language-menu-drawer" onClick={handleLangClick}><LanguageSharp fontSize="large" /></IconButton>
                     <StyledMenu id="language-menu-drawer" anchorEl={langAnchor} keepMounted
                         open={Boolean(langAnchor)} onClose={handleLangClose}>
                         {languages.map(lang => <MenuItem key={lang} onClick={() => handleLangClose(lang)}>{lang}</MenuItem>)}
