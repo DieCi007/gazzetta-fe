@@ -4,7 +4,7 @@ import { makeStyles, GridList, GridListTile, GridListTileBar, ListSubheader, Car
 import { LangContext } from '../App';
 import LocalizedStrings from 'react-localization';
 import { data } from '../constants/navbarStrings';
-
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     },
     titleBar: {
         background:
-            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+            'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0) 100%)',
     },
     subtitle: {
         display: 'flex',
@@ -78,8 +78,8 @@ function TopArticles() {
     useEffect(() => {
         const handleResize = () => {
             setGridSize(() => {
-                if (window.innerWidth < 650) return 2;
-                else if (window.innerWidth < 1150) return 3
+                if (window.innerWidth < 650) return 1.5;
+                else if (window.innerWidth < 1150) return 3.1
                 else return 2;
             });
         }
@@ -106,35 +106,33 @@ function TopArticles() {
 
     return (
         <div id="topArticles" className={classes.root}>
-            <GridList >
-                <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-                    <ListSubheader component="div" className={classes.subHeader}>{strings.topNews}</ListSubheader>
-                </GridListTile>
-            </GridList>
+            <ListSubheader component="div" className={classes.subHeader}>{strings.topNews}</ListSubheader>
             <GridList cellHeight={180} className={classes.gridList} cols={gridSize}>
                 {
                     articles.map(article => {
                         return (
                             <GridListTile key={article._id} className={classes.tile}>
-                                <CardActionArea>
-                                    <img style={{width:'100%', weight:'100%', objectFit:'cover'}} src={article.media} alt={article.title} />
-                                </CardActionArea>
-                                <GridListTileBar classes={{
-                                    root: classes.titleBar,
-                                    title: classes.title
-                                }}
-                                    title={article.title}
-                                    subtitle={
-                                        <div className={classes.subtitle}>
-                                            <small>
-                                                {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
-                                            </small>
-                                            <small className={classes.articleTag} >
-                                                {stringTags[article.tags[0]]}
-                                            </small>
-                                        </div>
-                                    }
-                                />
+                                <Link to={{ pathname: `/article/${article._id}`, state: { body: article.body } }}>
+                                    <CardActionArea>
+                                        <img height={180} style={{ width: '100%', weight: '100%', objectFit: 'cover' }} src={article.media} alt={article.title} />
+                                    </CardActionArea>
+                                    <GridListTileBar classes={{
+                                        root: classes.titleBar,
+                                        title: classes.title
+                                    }}
+                                        title={article.title}
+                                        subtitle={
+                                            <div className={classes.subtitle}>
+                                                <p>
+                                                    {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
+                                                </p>
+                                                <p className={classes.articleTag} >
+                                                    {stringTags[article.tags[0]]}
+                                                </p>
+                                            </div>
+                                        }
+                                    />
+                                </Link>
                             </GridListTile>
                         )
                     })

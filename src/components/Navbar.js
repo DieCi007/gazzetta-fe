@@ -13,7 +13,7 @@ import { LangContext } from '../App';
 import MyDrawer from './MyDrawer';
 import { StyledMenu } from '../materialStyles/styledMenu'
 import { langs } from '../constants/languageStrings';
-
+import { Link } from 'react-router-dom';
 
 let strings = new LocalizedStrings(data);
 let langOBJ = new LocalizedStrings(langs);
@@ -56,7 +56,9 @@ function Navbar() {
         <div id="navbar">
             <AppBar position="relative" elevation={2}>
                 <Toolbar className="navbar-toolbar" >
-                    <Typography variant="h5" className="navbar-logo">GAZZETTA.AL</Typography>
+                    <Link style={{ textDecoration: 'none'}} to="/">
+                        <Button disableElevation variant="text" style={{ color: 'white' }}> <Typography align="center" variant="h5" >GAZZETTA.AL</Typography></Button>
+                    </Link>
                     <div className="navbar-title-list">
                         <Button style={{ color: 'white' }}>
                             <HomeTwoTone fontSize="large" />

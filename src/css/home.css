@@ -12,25 +12,37 @@
 #homeContent {
     width: 95%;
     display: flex;
-    flex-wrap: wrap;
+    align-content: center;
+    align-items: flex-start;
     padding-top: 2vh;
+    flex-wrap: wrap;
 }
 
 .home-right-container {
     width: 40%;
-    padding: 1vh;
+    padding-left: 1vh;
+    flex: 1;
 }
 
 .home-left-container {
     width: 55%;
-    height: fit-content;
     display: flex;
-    justify-content: center;
-    padding: 1vh;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    padding-right: 1vh;
+}
+
+.home-left-container>* {
+    padding-bottom: 2vh;
+}
+
+#homeContent>#articleGroup {
+    padding-bottom: 1vh;
 }
 
 .home-articleGroup-container {
-    flex-basis: 100px;
+    width: 20%;
 }
 
 #homeCarousel {
@@ -45,9 +57,14 @@
     }
     .home-left-container, .home-right-container {
         width: 100%;
+        padding: 0;
     }
     #homeCarousel {
         width: 90%;
+    }
+    .home-right-container {
+        order: -1;
+        padding-bottom: 1vh;
     }
 }
 

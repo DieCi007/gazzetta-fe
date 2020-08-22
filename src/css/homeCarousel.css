@@ -19,3 +19,7 @@
 .slick-dots {
     bottom: -15px;
 }
+/* prevent jump to top*/
+div.slick-initialized.slick-slider {
+    position: relative!important;
+}

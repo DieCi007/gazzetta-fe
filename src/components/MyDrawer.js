@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import '../css/navbar.css';
 import { LangContext } from '../App';
-import { SwipeableDrawer, List, Divider, Button, MenuItem, ListItem, ListItemText,IconButton } from '@material-ui/core';
+import { SwipeableDrawer, List, Divider, Button, MenuItem, ListItem, ListItemText, IconButton } from '@material-ui/core';
 import { Facebook, MenuSharp, YouTube, Instagram, LanguageSharp } from '@material-ui/icons'
 import { StyledMenu } from '../materialStyles/styledMenu';
 import LocalizedStrings from 'react-localization';
 import { langs } from '../constants/languageStrings';
 import { data } from '../constants/navbarStrings';
+import { HomeTwoTone } from '@material-ui/icons';
 
 let strings = new LocalizedStrings(data);
 let langOBJ = new LocalizedStrings(langs);
@@ -50,6 +51,7 @@ function MyDrawer() {
             </Button>
             <SwipeableDrawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer} disableSwipeToOpen={!isMobileUser}
                 onOpen={toggleDrawer} disableBackdropTransition={!iOS} disableDiscovery={iOS}>
+                <ListItem style={{ justifyContent: 'center' }} divider={true} button><HomeTwoTone fontSize="large" /></ListItem>
                 <List style={{ minWidth: 200 }}>
                     {titles.map(title => <ListItem button key={title}> <ListItemText >{title}</ListItemText></ListItem>)}
                     {moreTitles.map(title => <ListItem button key={title}> <ListItemText >{title}</ListItemText></ListItem>)}

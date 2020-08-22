@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
-import { makeStyles, CardActionArea, Card, CardMedia, Typography } from '@material-ui/core';
+import { makeStyles, ListSubheader, CardActionArea, Card, CardMedia, Typography } from '@material-ui/core';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../css/homeCarousel.css';
@@ -10,19 +10,35 @@ import LocalizedStrings from 'react-localization';
 import { LangContext } from '../App';
 
 const useStyles = makeStyles((theme) => ({
-   cardMedia: {
+    cardMedia: {
         [theme.breakpoints.down('sm')]: {
             height: 320
         },
         [theme.breakpoints.down('xs')]: {
             height: 250
         }
+    },
+    subHeader: {
+        fontSize: '1.5rem',
+        textAlign: 'start'
     }
 }));
 let strings = new LocalizedStrings(data);
+let stringLatest = new LocalizedStrings({
+    al: {
+        latest: 'Lajmet e Fundit'
+    },
+    en: {
+        latest: 'Latest News'
+    },
+    it: {
+        latest: 'Ultime Notizie'
+    }
+});
 function HomeCarousel() {
     const langContext = useContext(LangContext);
     strings.setLanguage(langContext.langState);
+    stringLatest.setLanguage(langContext.langState);
     const classes = useStyles();
     const settings = {
         arrows: true,
@@ -46,9 +62,10 @@ function HomeCarousel() {
             }
         }
         fetchData();
-    }, [])
+    }, []);
     return (
         <div id="homeCarousel" >
+            <ListSubheader component="div" className={classes.subHeader}>{stringLatest.latest}</ListSubheader>
             <Slider {...settings} autoplay className="carousel">
                 {
                     articles.map(article => {
@@ -82,11 +99,11 @@ function HomeCarousel() {
                                             {article.title}
                                         </Typography>
                                         <Typography style={{
-                                            color:'#DEDEDE',
+                                            color: '#DEDEDE',
                                             width: '90%',
                                             alignSelf: 'center',
                                             textAlign: 'end'
-                                        }} variant="subtitle1">
+                                        }} variant="body2">
                                             {strings[article.tags[0]]}
                                         </Typography>
 
