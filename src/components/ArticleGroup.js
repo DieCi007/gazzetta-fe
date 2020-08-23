@@ -8,6 +8,7 @@ import { LangContext } from '../App';
 import { data } from '../constants/navbarStrings';
 import LocalizedStrings from 'react-localization';
 import '../css/articleGroup.css';
+import { Link } from 'react-router-dom';
 
 let stringTags = new LocalizedStrings(data);
 const useStyles = makeStyles((theme) => ({
@@ -88,11 +89,11 @@ function ArticleGroup({ tag, primary }) {
     const [gridSize, setGridSize] = useState(0);
 
     const handleRightClick = () => {
-        gridRef.current.scrollLeft += 150;
+        gridRef.current.scrollLeft += 200;
     }
 
     const handleLeftClick = () => {
-        gridRef.current.scrollLeft -= 150;
+        gridRef.current.scrollLeft -= 200;
     }
 
     useEffect(() => {
@@ -123,8 +124,22 @@ function ArticleGroup({ tag, primary }) {
         }
         fetchData();
     }, []);
+    
+    const handleArticleClick = () => {
+        window.scrollTo({ top: 0 });
+    }
 
-
+    const handleMouseEnter = () => {
+        gridRef.current.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) {
+                e.preventDefault();
+                gridRef.current.scrollLeft += 50;
+            } else {
+                e.preventDefault();
+                gridRef.current.scrollLeft -= 50;
+            }
+        });
+    };
     return (
         <div id="articleGroup" className={classes.root}>
             <ListSubheader component="div" className={classes.subHeader}>{stringTags[tag]}</ListSubheader>
@@ -132,31 +147,33 @@ function ArticleGroup({ tag, primary }) {
                 {
                     articles.map(article => {
                         return (
-                            <GridListTile key={article._id}>
-                                <Card>
-                                    <CardActionArea>
-                                        <CardMedia className={classes.cardMedia}
-                                            component="img"
-                                            height={190}
-                                            image={article.media} />
-                                        <div className={classes.textContainer}>
-                                            <Typography
-                                                variant='h6'
-                                                className={classes.title}>
-                                                {article.title}</Typography>
-                                            <Typography
-                                                variant='caption'
-                                                className={classes.date}>
-                                                {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
-                                            </Typography>
-                                            <Typography
-                                                variant='caption'
-                                                className={classes.tag}>
-                                                {stringTags[article.tags[0]]}
-                                            </Typography>
-                                        </div>
-                                    </CardActionArea>
-                                </Card>
+                            <GridListTile key={article._id} onMouseEnter={handleMouseEnter}>
+                                <Link to={{ pathname: `/article/${article._id}`, state: { article: article } }} onClick={handleArticleClick}>
+                                    <Card>
+                                        <CardActionArea>
+                                            <CardMedia className={classes.cardMedia}
+                                                component="img"
+                                                height={190}
+                                                image={article.media} />
+                                            <div className={classes.textContainer}>
+                                                <Typography
+                                                    variant='h6'
+                                                    className={classes.title}>
+                                                    {article.title}</Typography>
+                                                <Typography
+                                                    variant='caption'
+                                                    className={classes.date}>
+                                                    {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
+                                                </Typography>
+                                                <Typography
+                                                    variant='caption'
+                                                    className={classes.tag}>
+                                                    {stringTags[article.tags[0]]}
+                                                </Typography>
+                                            </div>
+                                        </CardActionArea>
+                                    </Card>
+                                </Link>
                             </GridListTile>
                         )
                     })

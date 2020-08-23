@@ -112,7 +112,7 @@ function TopArticles() {
                     articles.map(article => {
                         return (
                             <GridListTile key={article._id} className={classes.tile}>
-                                <Link to={{ pathname: `/article/${article._id}`, state: { body: article.body } }}>
+                                <Link to={{ pathname: `/article/${article._id}`, state: { article: article } }}>
                                     <CardActionArea>
                                         <img height={180} style={{ width: '100%', weight: '100%', objectFit: 'cover' }} src={article.media} alt={article.title} />
                                     </CardActionArea>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { makeStyles, ListSubheader, CardActionArea, Card, CardMedia, Typography } from '@material-ui/core';
@@ -8,6 +8,7 @@ import '../css/homeCarousel.css';
 import { data } from '../constants/navbarStrings';
 import LocalizedStrings from 'react-localization';
 import { LangContext } from '../App';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     cardMedia: {
@@ -36,6 +37,7 @@ let stringLatest = new LocalizedStrings({
     }
 });
 function HomeCarousel() {
+    const sliderRef = useRef(null);
     const langContext = useContext(LangContext);
     strings.setLanguage(langContext.langState);
     stringLatest.setLanguage(langContext.langState);
@@ -48,9 +50,10 @@ function HomeCarousel() {
         slidesToShow: 1,
         slidesToScroll: 1,
         adaptiveHeight: true,
-        lazyLoad: "ondemand"
+        lazyLoad: "progressive"
     };
     const [articles, setArticles] = useState([]);
+    const [mouseX, setMouseX] = useState(0);
     useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
@@ -63,15 +66,22 @@ function HomeCarousel() {
         }
         fetchData();
     }, []);
+
+    let history = useHistory();
+
+    const handleArticleClick = (article, e) => {
+        if (e.clientX > mouseX - 20 && e.clientX < mouseX + 20) history.push(`/article/${article._id}`, { article: article });
+    }
+
     return (
         <div id="homeCarousel" >
             <ListSubheader component="div" className={classes.subHeader}>{stringLatest.latest}</ListSubheader>
-            <Slider {...settings} autoplay className="carousel">
+            <Slider ref={sliderRef} {...settings} autoplay={true} className="carousel">
                 {
                     articles.map(article => {
                         return (
                             <Card key={article._id} className="homeCarousel-card">
-                                <CardActionArea>
+                                <CardActionArea onMouseDown={(e) => setMouseX(e.clientX)} onClick={(e) => handleArticleClick(article, e)} >
                                     <CardMedia classes={{ root: classes.cardMedia }}
                                         className="homeCarousel-cardMedia"
                                         component="img"

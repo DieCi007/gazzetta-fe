@@ -13,7 +13,8 @@ import { LangContext } from '../App';
 import MyDrawer from './MyDrawer';
 import { StyledMenu } from '../materialStyles/styledMenu'
 import { langs } from '../constants/languageStrings';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+
 
 let strings = new LocalizedStrings(data);
 let langOBJ = new LocalizedStrings(langs);
@@ -21,6 +22,7 @@ function Navbar() {
     const langContext = useContext(LangContext);
     strings.setLanguage(langContext.langState);
     const titles = [strings.politics, strings.chronicle, strings.economy, strings.sport, strings.world];
+    const history = useHistory();
 
     const moreTitles = [strings.culture, strings.lifestyle, strings.technology, strings.cinema];
     const languages = [langOBJ.al, langOBJ.en, langOBJ.it];
@@ -29,8 +31,9 @@ function Navbar() {
     const handleTitleClick = (e) => {
         setTitleAnchor(e.currentTarget);
     }
-    const handleTitleClose = () => {
+    const handleTitleClose = (index) => {
         setTitleAnchor(null);
+        if (index) history.push(`/tag/${moreTitles[index]}`);
     }
     const handleLangClick = (e) => {
         setLangAnchor(e.currentTarget);
@@ -50,30 +53,35 @@ function Navbar() {
                 break;
         }
         setLangAnchor(null);
-    }
+    };
+    const handlePrimaryClick = (index) => {
+        history.push(`/tag/${titles[index]}`);
+    };
 
     return (
         <div id="navbar">
             <AppBar position="relative" elevation={2}>
                 <Toolbar className="navbar-toolbar" >
-                    <Link style={{ textDecoration: 'none'}} to="/">
+                    <Link style={{ textDecoration: 'none' }} to="/">
                         <Button disableElevation variant="text" style={{ color: 'white' }}> <Typography align="center" variant="h5" >GAZZETTA.AL</Typography></Button>
                     </Link>
                     <div className="navbar-title-list">
-                        <Button style={{ color: 'white' }}>
-                            <HomeTwoTone fontSize="large" />
-                        </Button>
+                        <Link to="/">
+                            <Button style={{ color: 'white' }}>
+                                <HomeTwoTone fontSize="large" />
+                            </Button>
+                        </Link>
                         <ButtonGroup disableElevation variant="text" className="navbar-buttonGroup">
-                            {titles.map(title =>
-                                <Button key={title}>{title}</Button>
+                            {titles.map((title, index) =>
+                                <Button key={title} onClick={() => handlePrimaryClick(index)}>{title}</Button>
                             )}
                         </ButtonGroup>
                         <Button style={{ color: 'white' }} aria-controls="navbar-titles-menu" onClick={handleTitleClick}>
                             <ExpandMoreSharp fontSize="large" />
                         </Button>
                         <StyledMenu id="navbar-titles-menu" anchorEl={titleAnchor} keepMounted
-                            open={Boolean(titleAnchor)} onClose={handleTitleClose}>
-                            {moreTitles.map(title => <MenuItem key={title} onClick={handleTitleClose}>{title}</MenuItem>)}
+                            open={Boolean(titleAnchor)} onClose={() => handleTitleClose(false)}>
+                            {moreTitles.map((title, index) => <MenuItem key={title} onClick={() => handleTitleClose(index)}>{title}</MenuItem>)}
                         </StyledMenu>
                     </div>
                     <div className="navbar-links">
