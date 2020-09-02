@@ -22,6 +22,17 @@ const useStyles = makeStyles((theme) => ({
     subHeader: {
         fontSize: '1.5rem',
         textAlign: 'start'
+    },
+    textContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        color: 'white',
+        width: '100%',
+        position: 'absolute',
+        bottom: '0',
+        height: '80%',
+        background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%)'
     }
 }));
 let strings = new LocalizedStrings(data);
@@ -36,7 +47,7 @@ let stringLatest = new LocalizedStrings({
         latest: 'Ultime Notizie'
     }
 });
-function HomeCarousel() {
+function HomeCarousel({ tag }) {
     const sliderRef = useRef(null);
     const langContext = useContext(LangContext);
     strings.setLanguage(langContext.langState);
@@ -56,7 +67,7 @@ function HomeCarousel() {
     const [mouseX, setMouseX] = useState(0);
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`, { params: tag ? { tag: tag } : {} });
             try {
                 setArticles(response.data);
             } catch (err) {
@@ -65,7 +76,7 @@ function HomeCarousel() {
             }
         }
         fetchData();
-    }, []);
+    }, [tag]);
 
     let history = useHistory();
 
@@ -79,6 +90,8 @@ function HomeCarousel() {
             <Slider ref={sliderRef} {...settings} autoplay={true} className="carousel">
                 {
                     articles.map(article => {
+                        const translated = new LocalizedStrings(article.article);
+                        translated.setLanguage(langContext.langState);
                         return (
                             <Card key={article._id} className="homeCarousel-card">
                                 <CardActionArea onMouseDown={(e) => setMouseX(e.clientX)} onClick={(e) => handleArticleClick(article, e)} >
@@ -86,27 +99,16 @@ function HomeCarousel() {
                                         className="homeCarousel-cardMedia"
                                         component="img"
                                         height="370"
-                                        src={article.media}
+                                        src={article.media[0]}
                                     >
                                     </CardMedia>
-                                    <div className="homeCarousel-textContainer"
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'flex-end',
-                                            color: 'white',
-                                            width: '100%',
-                                            position: 'absolute',
-                                            bottom: '0',
-                                            height: '80%',
-                                            background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 65%, rgba(0,0,0,0) 100%)'
-                                        }}>
+                                    <div className={`homeCarousel-textContainer ${classes.textContainer}`}>
                                         <Typography style={{
                                             width: '90%',
                                             alignSelf: 'center',
                                             textAlign: 'center'
                                         }} variant="h4" component="h2">
-                                            {article.title}
+                                            {translated.title}
                                         </Typography>
                                         <Typography style={{
                                             color: '#DEDEDE',
@@ -116,7 +118,6 @@ function HomeCarousel() {
                                         }} variant="body2">
                                             {strings[article.tags[0]]}
                                         </Typography>
-
                                     </div>
                                 </CardActionArea>
                             </Card>

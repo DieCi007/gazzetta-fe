@@ -15,7 +15,7 @@ function Home() {
             <Router>
                 <Navbar />
                 <Paper elevation={3} id="homeContent">
-                    <Paper style={{ backgroundColor: '#f0f0e5' }} elevation={2} className="home-left-container">
+                    <Paper style={{ backgroundColor: '#e4e2dc' }} elevation={2} className="home-left-container">
                         <Switch>
                             <Route path="/" exact render={() =>
                                 <>

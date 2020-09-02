@@ -51,10 +51,10 @@ function SingleTag({ match }) {
     return (
         <div id="singleTag" className={classes.root}>
             <Typography align="center" variant="h4" >{stringTags[tag]}</Typography>
-            <HomeCarousel />
+            <HomeCarousel tag={tag} />
             <br />
             <ListSubheader component="div" className={classes.subHeader}>{stringOlder.other}...</ListSubheader>
-            <PaginatedTag tag={tag} />
+            <PaginatedTag tag={tag} lang={langContext.langState}/>
         </div>
     )
 }

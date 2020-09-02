@@ -31,9 +31,8 @@ function Navbar() {
     const handleTitleClick = (e) => {
         setTitleAnchor(e.currentTarget);
     }
-    const handleTitleClose = (index) => {
+    const handleTitleClose = () => {
         setTitleAnchor(null);
-        if (index) history.push(`/tag/${moreTitles[index]}`);
     }
     const handleLangClick = (e) => {
         setLangAnchor(e.currentTarget);
@@ -54,10 +53,9 @@ function Navbar() {
         }
         setLangAnchor(null);
     };
-    const handlePrimaryClick = (index) => {
-        history.push(`/tag/${titles[index]}`);
-    };
-
+    const handleClick = (title) => {
+        history.push(`/tag/${title}`);
+    }
     return (
         <div id="navbar">
             <AppBar position="relative" elevation={2}>
@@ -72,16 +70,16 @@ function Navbar() {
                             </Button>
                         </Link>
                         <ButtonGroup disableElevation variant="text" className="navbar-buttonGroup">
-                            {titles.map((title, index) =>
-                                <Button key={title} onClick={() => handlePrimaryClick(index)}>{title}</Button>
+                            {titles.map(title =>
+                                <Button key={title} onClick={() => handleClick(title)}>{title}</Button>
                             )}
                         </ButtonGroup>
                         <Button style={{ color: 'white' }} aria-controls="navbar-titles-menu" onClick={handleTitleClick}>
                             <ExpandMoreSharp fontSize="large" />
                         </Button>
                         <StyledMenu id="navbar-titles-menu" anchorEl={titleAnchor} keepMounted
-                            open={Boolean(titleAnchor)} onClose={() => handleTitleClose(false)}>
-                            {moreTitles.map((title, index) => <MenuItem key={title} onClick={() => handleTitleClose(index)}>{title}</MenuItem>)}
+                            open={Boolean(titleAnchor)} onClose={handleTitleClose}>
+                            {moreTitles.map(title => <MenuItem key={title} component={Link} to={`/tag/${title}`} onClick={handleTitleClose}>{title}</MenuItem>)}
                         </StyledMenu>
                     </div>
                     <div className="navbar-links">

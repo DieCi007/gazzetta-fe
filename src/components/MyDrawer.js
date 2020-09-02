@@ -8,6 +8,7 @@ import LocalizedStrings from 'react-localization';
 import { langs } from '../constants/languageStrings';
 import { data } from '../constants/navbarStrings';
 import { HomeTwoTone } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
 
 let strings = new LocalizedStrings(data);
 let langOBJ = new LocalizedStrings(langs);
@@ -27,6 +28,11 @@ function MyDrawer() {
     }
     const handleLangClick = (e) => {
         setLangAnchor(e.currentTarget);
+    }
+
+    const changePage = () => {
+        window.scrollTo({ top: 80 });
+        toggleDrawer();
     }
     const handleLangClose = (lang) => {
         switch (lang) {
@@ -53,8 +59,14 @@ function MyDrawer() {
                 onOpen={toggleDrawer} disableBackdropTransition={!iOS} disableDiscovery={iOS}>
                 <ListItem style={{ justifyContent: 'center' }} divider={true} button><HomeTwoTone fontSize="large" /></ListItem>
                 <List style={{ minWidth: 200 }}>
-                    {titles.map(title => <ListItem button key={title}> <ListItemText >{title}</ListItemText></ListItem>)}
-                    {moreTitles.map(title => <ListItem button key={title}> <ListItemText >{title}</ListItemText></ListItem>)}
+                    {titles.map(title => <ListItem button key={title} component={Link}
+                        to={`/tag/${title}`} onClick={changePage}>
+                        <ListItemText >{title}</ListItemText>
+                    </ListItem>)}
+                    {moreTitles.map(title => <ListItem button key={title} component={Link}
+                        to={`/tag/${title}`} onClick={changePage}>
+                        <ListItemText >{title}</ListItemText>
+                    </ListItem>)}
                 </List>
                 <Divider fontSize="large" />
                 <br />

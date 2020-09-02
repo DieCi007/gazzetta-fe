@@ -40,7 +40,6 @@ function SingleArticle({ match, location }) {
     IF THERE IS NOT AN ARTICLE SEARCH FOR MATCH.PARAMS.ID IN DATABASE
     IF DB SEARCH FAILS REDIRECT TO HOME
     */
-
     const [article, setArticle] = useState({});
     useEffect(() => {
         if (location.state && location.state.article) {
@@ -63,22 +62,28 @@ function SingleArticle({ match, location }) {
         arrows: true,
         dots: false,
         slidesToShow: 1,
-        slidesToScroll: 0,
+        slidesToScroll: 1,
         adaptiveHeight: true,
         lazyLoad: "ondemand"
     };
-    if (article.title) {
+    if (article.article) {
+        const translated = new LocalizedStrings(article.article);
+        translated.setLanguage(langContext.langState);
         return (
             <div id="singleArticle">
-                <Typography align="center" variant="h4" >{article.title}</Typography>
-                <Typography align="right" variant="body2">{stringsComponent.by} {article.author} </Typography>
+                <Typography align="center" variant="h4" >{translated.title}</Typography>
+                <Typography align="right" variant="body2">{stringsComponent.by} {article.author.name} {article.author.lastname}</Typography>
                 <Slider {...sliderSettings}>
-                    <Card >
-                        <CardMedia classes={{ root: classes.cardMedia }}
-                            component="img"
-                            height="370"
-                            src={article.media} />
-                    </Card>
+                    {(article.media).map(img => {
+                        return (
+                            <Card key={img}>
+                                <CardMedia classes={{ root: classes.cardMedia }}
+                                    component="img"
+                                    height="370"
+                                    src={img} />
+                            </Card>
+                        )
+                    })}
                 </Slider>
                 <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '1vh' }}>
                     <Typography align="left" variant="body2">{new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })} </Typography>
@@ -87,7 +92,7 @@ function SingleArticle({ match, location }) {
                 <div style={{ width: '95%' }}>
 
                 </div>
-                <Typography align="left" variant="h6"> {article.body} </Typography>
+                <Typography align="left" variant="h6"> {translated.body} </Typography>
             </div>
         )
     } else return null;

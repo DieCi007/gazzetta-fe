@@ -126,7 +126,7 @@ function ArticleGroup({ tag, primary }) {
     }, []);
     
     const handleArticleClick = () => {
-        window.scrollTo({ top: 0 });
+        window.scrollTo({ top: 80 });
     }
 
     const handleMouseEnter = () => {

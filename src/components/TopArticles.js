@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
+        flexDirection:'column',
+        alignItems:'center',
         overflow: 'hidden',
         [theme.breakpoints.down('1150')]: {
             flexDirection: 'column',
@@ -105,7 +105,7 @@ function TopArticles() {
 
 
     return (
-        <div id="topArticles" className={classes.root}>
+        <div id="topArticles" className={classes.root} style={{justifyContent:'space-between', alignContent:'space-between'}}>
             <ListSubheader component="div" className={classes.subHeader}>{strings.topNews}</ListSubheader>
             <GridList cellHeight={180} className={classes.gridList} cols={gridSize}>
                 {
