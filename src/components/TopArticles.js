@@ -110,17 +110,19 @@ function TopArticles() {
             <GridList cellHeight={180} className={classes.gridList} cols={gridSize}>
                 {
                     articles.map(article => {
+                        const translated = new LocalizedStrings(article.article);
+                        translated.setLanguage(langContext.langState);
                         return (
                             <GridListTile key={article._id} className={classes.tile}>
                                 <Link to={{ pathname: `/article/${article._id}`, state: { article: article } }}>
                                     <CardActionArea>
-                                        <img height={180} style={{ width: '100%', weight: '100%', objectFit: 'cover' }} src={article.media} alt={article.title} />
+                                        <img height={180} style={{ width: '100%', weight: '100%', objectFit: 'cover' }} src={article.media[0]} alt={translated.title} />
                                     </CardActionArea>
                                     <GridListTileBar classes={{
                                         root: classes.titleBar,
                                         title: classes.title
                                     }}
-                                        title={article.title}
+                                        title={translated.title}
                                         subtitle={
                                             <div className={classes.subtitle}>
                                                 <p>
