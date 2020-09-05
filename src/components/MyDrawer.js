@@ -57,7 +57,7 @@ function MyDrawer() {
             </Button>
             <SwipeableDrawer anchor="right" open={isDrawerOpen} onClose={toggleDrawer} disableSwipeToOpen={!isMobileUser}
                 onOpen={toggleDrawer} disableBackdropTransition={!iOS} disableDiscovery={iOS}>
-                <ListItem style={{ justifyContent: 'center' }} divider={true} button><HomeTwoTone fontSize="large" /></ListItem>
+                <ListItem component={Link} to='/' onClick={toggleDrawer} style={{ justifyContent: 'center' }} divider={true} button><HomeTwoTone fontSize="large" /></ListItem>
                 <List style={{ minWidth: 200 }}>
                     {titles.map(title => <ListItem button key={title} component={Link}
                         to={`/tag/${title}`} onClick={changePage}>

@@ -13,6 +13,7 @@
     width: 96%;
     display: flex;
     align-content: center;
+    justify-content: space-around;
     align-items: flex-start;
     padding-top: 2vh;
     flex-wrap: wrap;
@@ -35,6 +36,7 @@
     align-items: center;
     flex-direction: column;
     margin-right: 1vh;
+    min-height: max-content;
 }
 
 .home-left-container>* {
@@ -51,6 +53,7 @@
 #singleArticle {
     padding-top: 1vh;
     min-height: 75vh;
+    height: max-content;
 }
 
 #homeCarousel, #singleArticle {

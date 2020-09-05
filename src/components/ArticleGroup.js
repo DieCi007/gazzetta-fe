@@ -13,10 +13,9 @@ import { Link } from 'react-router-dom';
 let stringTags = new LocalizedStrings(data);
 const useStyles = makeStyles((theme) => ({
     root: {
-        position: 'relative',
+        position: 'relative'
     },
     cardMedia: {
-
     },
     subHeader: {
         fontSize: '1.5rem',
@@ -85,6 +84,7 @@ function ArticleGroup({ tag, primary }) {
     const langContext = useContext(LangContext);
     stringTags.setLanguage(langContext.langState);
     const [articles, setArticles] = useState([]);
+    const [maxWidth, setMaxWidth] = useState('100%');
     const classes = useStyles();
     const [gridSize, setGridSize] = useState(0);
 
@@ -99,22 +99,45 @@ function ArticleGroup({ tag, primary }) {
     useEffect(() => {
         const handleResize = () => {
             setGridSize(() => {
-                if (window.innerWidth < 650) return 1.3;
-                else if (window.innerWidth < 1150) return 2.8;
-                else if (primary) return 2.5;
-                else return 4.8;
+                if (window.innerWidth < 650) return articles.length >= 2 ? 1.3 : 1;
+                else if (window.innerWidth < 1150) return articles.length >= 3 ? 2.8 : articles.length;
+                else if (primary) return articles.length >= 3 ? 2.5 : articles.length;
+                else return articles.length >= 5 ? 4.8 : articles.length;
+            });
+        }
+        const handleMaxWidth = () => {
+            setMaxWidth(() => {
+                if (window.innerWidth < 650) return '100%';
+                else if (window.innerWidth < 1150) {
+                    if (primary) {
+                        if (articles.length < 2) return '60%';
+                        else return '100%';
+                    } else if (articles.length < 2) return '70%';
+                    else if (articles.length < 3) return '90%';
+                    else return '100%';
+                } else {
+                    if (primary) {
+                        if (articles.length < 2) return '60%';
+                        else return '100%';
+                    } else if (articles.length < 2) return '30%';
+                    else if (articles.length < 4) return '80%';
+                    else return '100%';
+                }
             });
         }
         handleResize();
+        handleMaxWidth();
         window.addEventListener('resize', handleResize);
+        window.addEventListener('resize', handleMaxWidth);
         return () => {
             window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', handleMaxWidth);
         }
-    }, [primary])
+    }, [primary, articles.length])
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`, { params: { tag: tag } });
             try {
                 setArticles(response.data);
             } catch (err) {
@@ -123,8 +146,8 @@ function ArticleGroup({ tag, primary }) {
             }
         }
         fetchData();
-    }, []);
-    
+    }, [tag]);
+
     const handleArticleClick = () => {
         window.scrollTo({ top: 80 });
     }
@@ -140,26 +163,29 @@ function ArticleGroup({ tag, primary }) {
             }
         });
     };
+
     return (
-        <div id="articleGroup" className={classes.root}>
+        <div id="articleGroup" className={classes.root} style={{ width: maxWidth }}>
             <ListSubheader component="div" className={classes.subHeader}>{stringTags[tag]}</ListSubheader>
-            <GridList cellHeight={190} ref={gridRef} className={classes.gridList} cols={gridSize}>
+            <GridList cellHeight={190} ref={gridRef} className={classes.gridList} cols={gridSize} >
                 {
                     articles.map(article => {
+                        const translated = new LocalizedStrings(article.article);
+                        translated.setLanguage(langContext.langState);
                         return (
-                            <GridListTile key={article._id} onMouseEnter={handleMouseEnter}>
+                            <GridListTile key={article._id} onMouseEnter={handleMouseEnter} >
                                 <Link to={{ pathname: `/article/${article._id}`, state: { article: article } }} onClick={handleArticleClick}>
                                     <Card>
                                         <CardActionArea>
                                             <CardMedia className={classes.cardMedia}
                                                 component="img"
                                                 height={190}
-                                                image={article.media} />
+                                                image={article.media[0]} />
                                             <div className={classes.textContainer}>
                                                 <Typography
                                                     variant='h6'
                                                     className={classes.title}>
-                                                    {article.title}</Typography>
+                                                    {translated.title}</Typography>
                                                 <Typography
                                                     variant='caption'
                                                     className={classes.date}>

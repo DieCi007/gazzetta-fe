@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         fontWeight: 'bold',
-        whiteSpace: 'normal'
+        whiteSpace: 'normal',
+        lineBreak:'strict'
     },
     articleTag: {
         backgroundColor: 'darkgreen',

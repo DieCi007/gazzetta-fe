@@ -96,9 +96,8 @@ function HomeCarousel({ tag }) {
                             <Card key={article._id} className="homeCarousel-card">
                                 <CardActionArea onMouseDown={(e) => setMouseX(e.clientX)} onClick={(e) => handleArticleClick(article, e)} >
                                     <CardMedia classes={{ root: classes.cardMedia }}
-                                        className="homeCarousel-cardMedia"
                                         component="img"
-                                        height="370"
+                                        height="400"
                                         src={article.media[0]}
                                     >
                                     </CardMedia>

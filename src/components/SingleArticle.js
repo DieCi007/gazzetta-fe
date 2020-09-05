@@ -10,10 +10,10 @@ import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
     cardMedia: {
         [theme.breakpoints.down('sm')]: {
-            height: 320
+            height: 400
         },
         [theme.breakpoints.down('xs')]: {
-            height: 250
+            height: 290
         }
     }
 }));
@@ -58,6 +58,13 @@ function SingleArticle({ match, location }) {
         }
     }, [location.state, match.params.id]);
 
+    useEffect(() => {
+        const addViewCount = async () => {
+            await axios.post(`${process.env.REACT_APP_API_URL}/article/views/${match.params.id}`);
+        }
+        addViewCount();
+    }, [match.params.id])
+
     const sliderSettings = {
         arrows: true,
         dots: false,
@@ -79,7 +86,7 @@ function SingleArticle({ match, location }) {
                             <Card key={img}>
                                 <CardMedia classes={{ root: classes.cardMedia }}
                                     component="img"
-                                    height="370"
+                                    height="450"
                                     src={img} />
                             </Card>
                         )
