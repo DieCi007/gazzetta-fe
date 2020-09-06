@@ -163,56 +163,56 @@ function ArticleGroup({ tag, primary }) {
             }
         });
     };
-
-    return (
-        <div id="articleGroup" className={classes.root} style={{ width: maxWidth }}>
-            <ListSubheader component="div" className={classes.subHeader}>{stringTags[tag]}</ListSubheader>
-            <GridList cellHeight={190} ref={gridRef} className={classes.gridList} cols={gridSize} >
-                {
-                    articles.map(article => {
-                        const translated = new LocalizedStrings(article.article);
-                        translated.setLanguage(langContext.langState);
-                        return (
-                            <GridListTile key={article._id} onMouseEnter={handleMouseEnter} >
-                                <Link to={{ pathname: `/article/${article._id}`, state: { article: article } }} onClick={handleArticleClick}>
-                                    <Card>
-                                        <CardActionArea>
-                                            <CardMedia className={classes.cardMedia}
-                                                component="img"
-                                                height={190}
-                                                image={article.media[0]} />
-                                            <div className={classes.textContainer}>
-                                                <Typography
-                                                    variant='h6'
-                                                    className={classes.title}>
-                                                    {translated.title}</Typography>
-                                                <Typography
-                                                    variant='caption'
-                                                    className={classes.date}>
-                                                    {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
-                                                </Typography>
-                                                <Typography
-                                                    variant='caption'
-                                                    className={classes.tag}>
-                                                    {stringTags[article.tags[0]]}
-                                                </Typography>
-                                            </div>
-                                        </CardActionArea>
-                                    </Card>
-                                </Link>
-                            </GridListTile>
-                        )
-                    })
-                }
-            </GridList>
-            <IconButton className={classes.buttonLeft} onClick={handleLeftClick}>
-                <ArrowBackIos />
-            </IconButton>
-            <IconButton className={classes.buttonRight} onClick={handleRightClick}>
-                <ArrowForwardIos />
-            </IconButton>
-        </div >
-    )
+    if (articles.length === 0) return null;
+    else return (
+            <div id="articleGroup" className={classes.root} style={{ width: maxWidth }}>
+                <ListSubheader component="div" className={classes.subHeader}>{stringTags[tag]}</ListSubheader>
+                <GridList cellHeight={190} ref={gridRef} className={classes.gridList} cols={gridSize} >
+                    {
+                        articles.map(article => {
+                            const translated = new LocalizedStrings(article.article);
+                            translated.setLanguage(langContext.langState);
+                            return (
+                                <GridListTile key={article._id} onMouseEnter={handleMouseEnter} >
+                                    <Link to={{ pathname: `/article/${article._id}`, state: { article: article } }} onClick={handleArticleClick}>
+                                        <Card>
+                                            <CardActionArea>
+                                                <CardMedia className={classes.cardMedia}
+                                                    component="img"
+                                                    height={190}
+                                                    image={article.media[0]} />
+                                                <div className={classes.textContainer}>
+                                                    <Typography
+                                                        variant='h6'
+                                                        className={classes.title}>
+                                                        {translated.title}</Typography>
+                                                    <Typography
+                                                        variant='caption'
+                                                        className={classes.date}>
+                                                        {new Date(article.date).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })}
+                                                    </Typography>
+                                                    <Typography
+                                                        variant='caption'
+                                                        className={classes.tag}>
+                                                        {stringTags[article.tags[0]]}
+                                                    </Typography>
+                                                </div>
+                                            </CardActionArea>
+                                        </Card>
+                                    </Link>
+                                </GridListTile>
+                            )
+                        })
+                    }
+                </GridList>
+                <IconButton className={classes.buttonLeft} onClick={handleLeftClick}>
+                    <ArrowBackIos />
+                </IconButton>
+                <IconButton className={classes.buttonRight} onClick={handleRightClick}>
+                    <ArrowForwardIos />
+                </IconButton>
+            </div >
+        )
 }
 
 export default ArticleGroup

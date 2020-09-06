@@ -93,7 +93,7 @@ function TopArticles() {
 
     useEffect(() => {
         const fetchArticles = async () => {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/article/top`);
             try {
                 setArticles(response.data);
             } catch (err) {
